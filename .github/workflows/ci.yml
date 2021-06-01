@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  on: push
+  schedule:
+    # 详细cron设置请访问https://crontab.guru
+    # 每天9点10分签到完所有账号，格式：'10 9 * * *'
+    # 注意这里的时区是UTC，如果表示北京9点10分，UTC时间为1点10分，减8小时即可
+    - cron: "18 01 */3 * *"
+
+jobs:
+  convert:
+    name: convert
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: clone subscribe
+      # SUB_REPO 用于存放代理配置文件的国内git地址
+      # SUB_URL 指机场订阅
+      run: |
+        git clone ${{ secrets.SUB_REPO }} output
+    - name: convert subscribe
+      run: |
+        sed -i s/~/${{ secrets.SUB_URL }}/g config/generate.ini
+        docker run --rm \
+          -v ${GITHUB_WORKSPACE}/config/:/base/ \
+          -v ${GITHUB_WORKSPACE}/output/:/base/output/ \
+          tindy2013/subconverter:latest \
+            subconverter -g
+    - name: fix surfboard 订阅链
+      run: |
+        sed -i '1s|https\?[^ ]\+\s|https://gitee.com/fbigun/sslist/raw/master/surfboard.conf |g' output/surfboard.conf
+    - name: update subscribe repo
+      run: |
+        cd output/
+        git add -A
+        git commit -m "update node"
+        git push
