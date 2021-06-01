@@ -2,7 +2,7 @@ name: CI
 
 on:
   workflow_dispatch:
-  on: push
+  push:
   schedule:
     # 详细cron设置请访问https://crontab.guru
     # 每天9点10分签到完所有账号，格式：'10 9 * * *'
