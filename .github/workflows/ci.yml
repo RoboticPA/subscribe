@@ -23,7 +23,7 @@ jobs:
         git clone ${{ secrets.SUB_REPO }} output
     - name: convert subscribe
       run: |
-        sed -i s/~/${{ secrets.SUB_URL }}/g config/generate.ini
+        sed -i 's|~|${{ secrets.SUB_URL }}|g' config/generate.ini
         docker run --rm \
           -v ${GITHUB_WORKSPACE}/config/:/base/ \
           -v ${GITHUB_WORKSPACE}/output/:/base/output/ \
