@@ -26,7 +26,7 @@ jobs:
             subconverter -g
     - name: fix surfboard 订阅链
       run: |
-        sed -i '1s|https\?[^ ]\+\s|https://gitee.com/fbigun/sslist/raw/master/surfboard.conf |g' output/surfboard.conf
+        sed -i "1s|https\?[^ ]\+\s|${{ secrets.SB_CONF }} |g" output/surfboard.conf
     - name: Setup Ossutil
       uses: manyuanrong/setup-ossutil@v2.0
       with:
