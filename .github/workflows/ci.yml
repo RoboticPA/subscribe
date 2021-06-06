@@ -33,4 +33,4 @@ jobs:
         endpoint: ${{ secrets.EP }}
         access-key-id: ${{ secrets.AKID }}
         access-key-secret: ${{ secrets.AKS }}
-    - run: cd output && ls | xargs -I {} ossutil cp -rf {} oss://${{ secrets.BK }}/
+    - run: ossutil cp -rf output/ oss://${{ secrets.BK }}/ --meta="Content-Type:text/plain; charset=utf-8"
