@@ -2,11 +2,10 @@
 
 ## 必须设置的环境变量
 
-`SUB_REPO` 用于存放代理配置文件的国内git地址 
+`EP` 阿里云地域节点
 
-`https://yourname:password@bitbucket.org/username/project.git`
+`AKID` 阿里云AccessKey ID
 
-`NAME` 上述仓库的用户名；`EMAIL` 上述仓库的邮箱
+`AKS` 阿里云AccessKey Secret
 
-`SUB_URL` 指机场订阅
-
+`BK` 阿里云存储桶

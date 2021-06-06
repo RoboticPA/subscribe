@@ -6,8 +6,7 @@ on:
   schedule:
     # 详细cron设置请访问https://crontab.guru
     # 每天9点10分签到完所有账号，格式：'10 9 * * *'
-    # 注意这里的时区是UTC，如果表示北京9点10分，UTC时间为1点10分，减8小时即可
-    - cron: "18 01 */3 * *"
+    - cron: "18 20 * * *"
 
 jobs:
   convert:
@@ -16,13 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: clone subscribe
-      # SUB_REPO 用于存放代理配置文件的国内git地址
-      # SUB_URL 指机场订阅
-      run: |
-        git clone ${{ secrets.SUB_REPO }} output
     - name: convert subscribe
       run: |
+        mkdir -p output
         sed -i 's|~|${{ secrets.SUB_URL }}|g' config/generate.ini
         docker run --rm \
           -v ${GITHUB_WORKSPACE}/config/:/base/ \
@@ -32,11 +27,10 @@ jobs:
     - name: fix surfboard 订阅链
       run: |
         sed -i '1s|https\?[^ ]\+\s|https://gitee.com/fbigun/sslist/raw/master/surfboard.conf |g' output/surfboard.conf
-    - name: update subscribe repo
-      run: |
-        cd output/
-        git config --global user.email "${{ secrets.EMAIL }}"
-        git config --global user.name "${{ secrets.NAME }}"
-        git add -A
-        git commit -m "update node"
-        git push
+    - name: Setup Ossutil
+      uses: manyuanrong/setup-ossutil@v2.0
+      with:
+        endpoint: ${{ secrets.EP }}
+        access-key-id: ${{ secrets.AKID }}
+        access-key-secret: ${{ secrets.AKS }}
+    - run: cd output && ls | xargs -I {} ossutil cp -rf {} oss://${{ secrets.BK }}/
