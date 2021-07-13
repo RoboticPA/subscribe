@@ -26,7 +26,8 @@ jobs:
             subconverter -g
     - name: fix surfboard 订阅链
       run: |
-        sed -i "1s|https\?[^ ]\+\s|${{ secrets.SB_CONF }} |g" output/*
+        # secrets.SB_CONF 值类似于 https://(bucket).oss-cn-hangzhou.aliyuncs.com
+        for f in $(ls);do sed -i "1s|https\?\S\+\s|${{ secrets.SB_CONF }}/$f |" output/$f;done
     - name: Setup Ossutil
       uses: manyuanrong/setup-ossutil@v2.0
       with:
