@@ -27,7 +27,7 @@ jobs:
     - name: fix surfboard 订阅链
       # secrets.SB_CONF 值类似于 https://(bucket).oss-cn-hangzhou.aliyuncs.com
       run: |
-        for f in $(ls);do sed -i "1s|https\?\S\+\s|${{ secrets.SB_CONF }}/$f |" output/$f;done
+        for f in $(ls output);do sed -i "1s|https\?\S\+\s|${{ secrets.SB_CONF }}/$f |" output/$f;done
     - name: Setup Ossutil
       uses: manyuanrong/setup-ossutil@v2.0
       with:
